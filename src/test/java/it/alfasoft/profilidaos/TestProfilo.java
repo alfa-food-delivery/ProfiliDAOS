@@ -1,6 +1,7 @@
 package it.alfasoft.profilidaos;
 
 import it.alfasoft.daosimple.DaoException;
+import it.alfasoft.utentidaos.RuoliDAOS;
 import it.alfasoft.utentidaos.Ruolo;
 import it.alfasoft.utentidaos.Utente;
 import it.alfasoft.utentidaos.UtentiDAOS;
@@ -19,15 +20,15 @@ public class TestProfilo {
 
     private static ProfiliDAOS profiliDAO = new ProfiliDAOS();
     private static UtentiDAOS utentiDAO = new UtentiDAOS();
+    private static RuoliDAOS ruoliDAO = new RuoliDAOS();
 
     private static Profilo profiloDeleted;
 
     @BeforeAll
     public static void beforeAll() throws DaoException {
-
         profiliDAO.setTableName("food_delivery.profili");
         utentiDAO.setTableName("food_delivery.utenti");
-        profiloDeleted = profiliDAO.getById(1);
+        ruoliDAO.setTableName("food_delivery.ruoli");
     }
     /**
      * Scenario Base
@@ -37,9 +38,12 @@ public class TestProfilo {
     @Test
     public void testCreaProfilo() throws DaoException {
         Profilo prof1 = new Profilo();
+
         //Prendo un utente esistente nel database
         Utente user = utentiDAO.getById(7);
-        Ruolo selectedUserRole = new Ruolo("CLIENTE");
+        Ruolo selectedUserRole = ruoliDAO.getById(1); //ruolo CLIENTE , 1
+        user.addRuolo(selectedUserRole);
+        utentiDAO.assegnaCategoria("CLIENTE",7);
 
         //Imposto i valori del profilo
         prof1.setNome("Carla");
@@ -68,7 +72,12 @@ public class TestProfilo {
     public static void reinserisciProfiloRimosso() throws SQLException {
         try ( Statement stmt = profiliDAO.getConnection().createStatement() )
         {
-            stmt.executeUpdate("insert into food_delivery.profili VALUES (1,1, 'Mario', 'Rossi', 'Via Guido Reni 104', '123456789', '1990-05-15');");
+            //stmt.executeUpdate("insert into food_delivery.profili (id_profilo,id_utente,id_ruolo,nome,cognome,indirizzo,telefono,data_nascita) VALUES (1,1,1, 'Mario', 'Rossi', 'Via Guido Reni 104', '123456789', '1990-05-15');");
+        }
+
+        try ( Statement stmt = utentiDAO.getConnection().createStatement() )
+        {
+            //stmt.executeUpdate("DELETE FROM food_delivery.utenti_ruoli  x WHERE x.id_utente = 7;");
         }
     }
 }

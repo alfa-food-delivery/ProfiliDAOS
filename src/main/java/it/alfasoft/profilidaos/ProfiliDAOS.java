@@ -72,6 +72,8 @@ public class ProfiliDAOS extends DaoImpl<Profilo,Integer> {
             queryBuilder.delete(lastIndex,lastIndex+1);
         }
 
+        queryBuilder.append(");");
+
         return queryBuilder.toString();
     }
 
