@@ -75,9 +75,14 @@ public class TestProfilo {
             //stmt.executeUpdate("insert into food_delivery.profili (id_profilo,id_utente,id_ruolo,nome,cognome,indirizzo,telefono,data_nascita) VALUES (1,1,1, 'Mario', 'Rossi', 'Via Guido Reni 104', '123456789', '1990-05-15');");
         }
 
+        try ( Statement stmt = profiliDAO.getConnection().createStatement() )
+        {
+            stmt.executeUpdate("DELETE FROM food_delivery.profili x WHERE x.id_utente = 7;");
+        }
+
         try ( Statement stmt = utentiDAO.getConnection().createStatement() )
         {
-            //stmt.executeUpdate("DELETE FROM food_delivery.utenti_ruoli  x WHERE x.id_utente = 7;");
+            stmt.executeUpdate("DELETE FROM food_delivery.utenti_ruoli  x WHERE x.id_utente = 7;");
         }
     }
 }
